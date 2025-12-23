@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title th:text="${disco.nombre}">Ficha del Disco</title>
+	<link rel="stylesheet" href="/styles/styles.css">
+	<link rel="stylesheet" href="/styles/styles_tablas.css">
+</head>
+
+<body>
+
+	<div th:include="plantillas.html::cabecera"></div>
+	<div th:include="plantillas.html::menu"></div>
+
+	<main>
+	
+		<section>
+		
+			<div class="tarjeta-disco" style="max-width: 600px; margin: auto;">
+			
+				<div class="tarjeta-header">
+			
+					<img th:src="@{/imagenes_discos/{foto}(foto=${disco.foto})}"
+						 alt="Foto Disco" class="tarjeta-imagen"
+						 onerror="this.onerror=null;this.src='/imagenes/default.png';">
+					
+					<div class="tarjeta-info">
+					
+						<h3 th:text="${disco.nombre}">Nombre del disco</h3>
+						<p class="artista">
+							<a th:if="${disco.artista != null}"
+							   th:href="@{/artistas/{id}(id=${disco.artista.id})}"
+							   th:text="${disco.artista.nombre}">Artista</a>
+							<span th:if="${disco.artista == null}">Sin artista</span>
+						</p>
+						<p class="fecha"
+						   th:with="f=${T(java.time.format.DateTimeFormatter).ofPattern('dd/MM/yyyy')}"
+						   th:text="${disco.fecha != null ? disco.fecha : 'Sin fecha'}">Fecha</p>
+						   
+					</div>
+					
+				</div>
+
+				<div class="tarjeta-detalle">
+				
+					<p>
+						<strong>Discográfica:</strong>
+						<a th:if="${disco.discografica != null}"
+						   th:href="@{/discografica/{id}(id=${disco.discografica.id})}"
+						   th:text="${disco.discografica.nombre}">Discográfica</a>
+						<span th:if="${disco.discografica == null}">Sin discográfica</span>
+					</p>
+					<p>
+						<strong>Productor:</strong>
+						<a th:if="${disco.productor != null}"
+						   th:href="@{/productor/{id}(id=${disco.productor.id})}"
+						   th:text="${disco.productor.nombre}">Productor</a>
+						<span th:if="${disco.productor == null}">Sin productor</span>
+					</p>
+					
+					<p>
+						<strong>Género:</strong> 
+						<a th:if="${disco.genero != null}"
+							th:href="@{/generos}"
+							th:text="${disco.genero.nombre}">Género</a> <span
+							th:if="${disco.genero == null}">Sin género</span>
+					</p>
+					<p>
+						<strong>Puntuación:</strong>
+						<span th:text="${disco.puntuacion}">0</span>/10
+					</p>
+
+					<div class="tarjeta-links" style="margin-top: 20px;">
+						<strong>Enlaces:</strong>
+						<a th:if="${disco.enlaceWikipedia != null}"
+						   th:href="${disco.enlaceWikipedia}" target="_blank" title="Wikipedia">
+							<img src="/imagenes/wikipedia.png" alt="Wikipedia" class="icono-link">
+						</a>
+						<a th:if="${disco.enlaceSpotify != null}"
+						   th:href="${disco.enlaceSpotify}" target="_blank" title="Spotify">
+							<img src="/imagenes/spotify.png" alt="Spotify" class="icono-link">
+						</a>
+						<a th:if="${disco.enlaceTidal != null}"
+						   th:href="${disco.enlaceTidal}" target="_blank" title="Tidal">
+							<img src="/imagenes/tidal.png" alt="Tidal" class="icono-link">
+						</a>
+						
+					</div>
+					
+				</div>
+
+				<div class="tarjeta-opciones">
+				
+					<a th:href="@{/discos}" class="btn-editar">Volver</a>
+					
+				</div>
+
+			</div>
+			
+		</section>
+		
+	</main>
+
+	<div th:include="plantillas.html::pie"></div>
+
+</body>
+
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADMINISTRACIÓN</title>
+<link rel="stylesheet" href="styles/styles.css">
+</head>
+
+<body>
+
+    <div th:include="plantillas.html::cabecera"></div>
+    <div th:include="plantillas.html::menu"></div>
+
+    <main>
+        <section style="text-align:center;">
+            <h1>ADMINISTRACIÓN</h1><br>
+            <div class="admin-buttons">
+                <a th:href="@{/administracion/artistas}">Artistas</a>
+                <a th:href="@{/administracion/discos}">Discos</a>
+                <a th:href="@{/administracion/discograficas}">Discográficas</a>
+                <a th:href="@{/administracion/productores}">Productores</a>
+                <a th:href="@{/administracion/generos}">Géneros</a>
+            </div>
+        </section>
+    </main>
+
+    <div th:include="plantillas.html::pie"></div>
+</body>
+
+</html>

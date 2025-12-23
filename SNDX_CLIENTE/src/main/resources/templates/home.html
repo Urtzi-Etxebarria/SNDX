@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inicio - SNDX</title>
+<link rel="stylesheet" href="styles/styles.css">
+</head>
+<body>
+
+	<div th:include="plantillas.html::cabecera"></div>
+	<div th:include="plantillas.html::menu"></div>
+
+	<main>
+		<section>
+			<div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 20px;">
+			    <h2 style="font-family: var(--fuenteTitulo); color: var(--colorContrasteClaro); margin: 0;">
+			        🎵 Bienvenido a <span style="color: var(--colorGradienteFin)"></span>
+			    </h2>
+    			<img th:src="@{/imagenes/logo.png}" alt="Logo SNDX" style="height: 100px; width: 100px;">
+			</div>
+
+			<p style="text-align: center; color: var(--textoSecundario); max-width: 800px; margin: 0 auto;">
+				Explora una colección única de discos, artistas, productores y
+				discográficas. Cada semana destacamos lo mejor del catálogo musical
+				para ti. 🎧
+			</p>
+		</section>
+
+		<!-- SECCIÓN DESTACADOS -->
+		<section style="margin-top: 40px;">
+			<h2 style="font-family: var(--fuenteTitulo); color: var(--colorContrasteClaro); text-align: center; margin-bottom: 30px;"> 🌟 Destacados de la Semana</h2>
+
+			<div class="tarjetas-discos">
+
+				<!-- DISCO DE LA SEMANA -->
+				<div class="tarjeta-disco" th:if="${discoSemana != null}">
+				<h3 class="titulo-semana">🎶 Disco de la Semana</h3>
+					<div class="tarjeta-header">
+
+						<img th:if="${discoSemana.foto != null}"
+							th:src="@{/imagenes_discos/{foto}(foto=${discoSemana.foto})}"
+							alt="Foto Disco" class="tarjeta-imagen"> <img
+							th:if="${discoSemana.foto == null}" src="/imagenes/default.png"
+							alt="Sin foto" class="tarjeta-imagen">
+
+						<div class="tarjeta-info">
+							<h3 th:text="${discoSemana.nombre}">Nombre del disco</h3>
+
+							<p class="artista">
+								<a th:if="${discoSemana.artista != null}"
+									th:href="@{/artistas/{id}(id=${discoSemana.artista.id})}"
+									th:text="${discoSemana.artista.nombre}">Artista</a> <span
+									th:if="${discoSemana.artista == null}">Sin artista</span>
+							</p>
+
+							<p class="fecha"
+								th:with="f=${T(java.time.format.DateTimeFormatter).ofPattern('dd/MM/yyyy')}"
+								th:text="${discoSemana.fecha != null ? discoSemana.fecha : 'Sin fecha'}">
+								Fecha</p>
+						</div>
+					</div>
+
+					<div class="tarjeta-detalle">
+						<p>
+							<strong>Discográfica:</strong> 
+							<a th:if="${discoSemana.discografica != null}" th:href="@{/discograficas/{id}(id=${discoSemana.discografica.id})}" th:text="${discoSemana.discografica.nombre}">Discográfica</a> 
+							<span th:if="${discoSemana.discografica == null}">Sin discográfica</span>
+						</p>
+
+						<p>
+							<strong>Productor:</strong>
+							<a th:if="${discoSemana.productor != null}" th:href="@{/productores/{id}(id=${discoSemana.productor.id})}" th:text="${discoSemana.productor.nombre}">Productor</a> 
+							<span th:if="${discoSemana.productor == null}">Sin productor</span>
+						</p>
+
+						<p>
+							<strong>Género:</strong> 
+							<a th:if="${discoSemana.genero != null}" th:href="@{/generos}" th:text="${discoSemana.genero.nombre}">Género</a>
+							<span th:if="${discoSemana.genero == null}">Sin género</span>
+						</p>
+
+						<p>
+							<strong>Puntuación:</strong> 
+							<span th:text="${discoSemana.puntuacion}">0</span>/10
+						</p>
+
+						<div class="tarjeta-links">
+							<strong>Enlaces:</strong> 
+							<a th:if="${discoSemana.enlaceWikipedia != null}" th:href="${discoSemana.enlaceWikipedia}" target="_blank" title="Wikipedia"> 
+								<img src="/imagenes/wikipedia.png" alt="Wikipedia" class="icono-link">
+							</a> 
+							<a th:if="${discoSemana.enlaceSpotify != null}" th:href="${discoSemana.enlaceSpotify}" target="_blank" title="Spotify"> <img src="/imagenes/spotify.png" alt="Spotify" class="icono-link"></a> 
+							<a th:if="${discoSemana.enlaceTidal != null}" th:href="${discoSemana.enlaceTidal}" target="_blank" title="Tidal"> <img src="/imagenes/tidal.png" alt="Tidal" class="icono-link"></a>
+						</div>
+					</div>
+
+				</div>
+
+
+				<!-- ARTISTA DE LA SEMANA -->
+				<div class="tarjeta-disco" th:if="${artistaSemana != null}">
+				<h3 class="titulo-semana">🎤 Artista de la Semana</h3>
+					<div class="tarjeta-header">
+						<img
+							th:src="@{/imagenes_artistas/{foto}(foto=${artistaSemana.foto})}"
+							alt="Artista de la semana" class="tarjeta-imagen">
+						<div class="tarjeta-info">
+							<h3 th:text="${artistaSemana.nombre}">Nombre Artista</h3>
+							<p class="nota-media">
+								<strong>Nota media:</strong> <span
+									th:text="${artistaSemana.notaMedia}">0</span>/10
+							</p>
+							<p class="fecha">Artista destacado por su trayectoria</p>
+						</div>
+					</div>
+					<div class="tarjeta-detalle">
+					
+						<!-- Redes musicales -->
+						<div class="tarjeta-links">
+							<strong>Enlaces:</strong>
+							<a th:if="${artistaSemana.enlaceWikipedia != null}" 
+							   th:href="${artistaSemana.enlaceWikipedia}" target="_blank" title="Wikipedia">
+								<img src="/imagenes/wikipedia.png" alt="Wikipedia" class="icono-link">
+							</a>
+							<a th:if="${artistaSemana.enlaceSpotify != null}" 
+							   th:href="${artistaSemana.enlaceSpotify}" target="_blank" title="Spotify">
+								<img src="/imagenes/spotify.png" alt="Spotify" class="icono-link">
+							</a>
+							<a th:if="${artistaSemana.enlaceTidal != null}" 
+							   th:href="${artistaSemana.enlaceTidal}" target="_blank" title="Tidal">
+								<img src="/imagenes/tidal.png" alt="Tidal" class="icono-link">
+							</a>
+							
+						</div><br>
+					
+						<div class="discografia">
+						
+							<h4>Discografía:</h4>
+							<ul>
+							    <li th:each="disco : ${artistaSemanaDiscografia}">
+							        <a th:href="@{'/discos/' + ${disco.id}}"
+							           th:text="${disco.nombre}">Nombre del disco</a>
+							    </li>
+							</ul>
+	
+						</div>
+						
+					</div>
+				</div>
+
+				<!-- PRODUCTOR DE LA SEMANA -->
+				<div class="tarjeta-disco" th:if="${productorSemana != null}">
+				<h3 class="titulo-semana">🎧 Productor de la Semana</h3>
+					<div class="tarjeta-header">
+						<img
+							th:src="@{/imagenes_productores/{foto}(foto=${productorSemana.foto})}"
+							alt="Productor de la semana" class="tarjeta-imagen">
+						<div class="tarjeta-info">
+							<h3 th:text="${productorSemana.nombre}">Nombre Productor</h3>
+							<p class="fecha">Reconocido por su trabajo reciente</p>
+						</div>
+					</div>
+					<div class="tarjeta-detalle">
+						<!-- Redes musicales -->
+						<div class="tarjeta-links">
+							<strong>Enlaces:</strong>
+							<a th:if="${productorSemana.enlaceWikipedia != null}" 
+							   th:href="${productorSemana.enlaceWikipedia}" target="_blank" title="Wikipedia">
+								<img src="/imagenes/wikipedia.png" alt="Wikipedia" class="icono-link">
+							</a>
+							
+						</div><br>
+
+						<div>
+							<h4>Discografía:</h4>
+							<ul>
+							    <li th:each="disco : ${productorSemanaDiscografia}">
+							        <a th:href="@{'/discos/' + ${disco.id}}"
+							           th:text="${disco.nombre}">Nombre del disco</a>
+							    </li>
+							</ul>
+						</div>
+					</div>
+				</div>
+
+				<!-- DISCOGRÁFICA DE LA SEMANA -->
+				<div class="tarjeta-disco" th:if="${discograficaSemana != null}">
+				<h3 class="titulo-semana">💿 Discográfica de la Semana</h3>
+					<div class="tarjeta-header">
+						<img
+							th:src="@{/imagenes_logos/{logo}(logo=${discograficaSemana.logo})}"
+							alt="Discográfica de la semana" class="tarjeta-imagen">
+						<div class="tarjeta-info">
+							<h3 th:text="${discograficaSemana.nombre}">Nombre
+								Discográfica</h3>
+							<p class="fecha">Sello destacado por su innovación</p>
+						</div>
+					</div>
+					<div class="tarjeta-detalle">
+						<!-- Redes musicales -->
+						<div class="tarjeta-links">
+							<strong>Enlaces:</strong>
+							<a th:if="${discograficaSemana.enlaceWikipedia != null}" 
+							   th:href="${discograficaSemana.enlaceWikipedia}" target="_blank" title="Wikipedia">
+								<img src="/imagenes/wikipedia.png" alt="Wikipedia" class="icono-link">
+							</a>
+
+						</div><br>
+
+						<div>
+						
+							<h4>Discografía:</h4>
+							<ul>
+							    <li th:each="disco : ${discograficaSemanaDiscografia}">
+							        <a th:href="@{'/discos/' + ${disco.id}}"
+							           th:text="${disco.nombre}">Nombre del disco</a>
+							    </li>
+							</ul>
+							
+						</div>
+						
+					</div>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<div th:include="plantillas.html::pie"></div>
+
+</body>
+</html>

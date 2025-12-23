@@ -1,0 +1,81 @@
+<div th:fragment="cabecera">
+
+	<header style="display: flex; justify-content: space-between; align-items: center; padding: 10px; height: 150px; box-sizing: border-box;">
+		
+		<!-- Izquierda: logo ocupando el alto completo -->
+		<div id="cabecera_izq" style="height: 100%;">
+			<img th:src="@{/imagenes/logo.png}" style="height: 100%; width: 150px;" alt="Logo">
+		</div>
+
+		<!-- Centro: título -->
+		<div id="cabecera_cen" style="text-align: center; flex-grow: 1;">
+			<h1 style="margin: 0;">SNDX</h1>
+			<h2 style="margin: 0;">SoundIndex</h2>
+		</div>
+
+		<!-- Derecha: redes y sesión -->
+		<div id="cabecera_der" style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
+			
+			<!-- Iconos redes -->
+			<div style="display: flex; gap: 8px;">
+				<a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">
+					<img th:src="@{/imagenes/facebook.png}" alt="Facebook">
+				</a>
+				<a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">
+					<img th:src="@{/imagenes/instagram.png}" alt="Instagram">
+				</a>
+			</div>
+
+			<!-- Usuario y logout -->
+			<div th:if="${session.jwt_token != null}" style="font-size: 14px;">
+				<span th:text="'Hola, ' + ${session.name}" style="font-weight: bold; display: block; margin-bottom: 5px;">Hola, Usuario</span>
+				<a href="/logout" style="color: white; text-decoration: none;">Cerrar sesión</a>
+			</div>
+
+		</div>
+		
+	</header>
+	
+</div>
+
+
+<div th:fragment="menu">
+
+	<nav>
+		<ul>
+			<li><a th:href="@{/home}">Inicio</a></li>
+			<li><a th:href="@{/artistas}">Artistas</a></li>
+			<li><a th:href="@{/discos}">Discos</a></li>
+			<li><a th:href="@{/discograficas}">Discográficas</a></li>
+			<li><a th:href="@{/productores}">Productores</a></li>
+			<li><a th:href="@{/generos}">Géneros</a></li>
+			<li th:if="${session.rol == 'ADMIN'}">
+				<a th:href="@{/administracion}">Administración</a>
+			</li>
+		</ul>
+	</nav>
+	
+</div>
+
+<div th:fragment="admin_buttons">
+    <h1 style="text-align:center;">ADMINISTRACIÓN</h1><br>
+    <div class="admin-buttons" style="display: flex; justify-content: center; gap: 15px;">
+        <a th:href="@{/administracion/artistas}">Artistas</a>
+        <a th:href="@{/administracion/discos}">Discos</a>
+        <a th:href="@{/administracion/discograficas}">Discográficas</a>
+        <a th:href="@{/administracion/productores}">Productores</a>
+        <a th:href="@{/administracion/generos}">Géneros</a>
+    </div>
+</div>
+
+
+
+<div th:fragment="pie">
+
+    <footer>
+        <p>SNDX (SoundIndex) &copy; <span th:text="${#dates.format(new java.util.Date(), 'yyyy')}"></span> | 
+           <a href="mailto:info@sndx.com">info@sndx.com</a>
+        </p>
+    </footer>
+    
+</div>

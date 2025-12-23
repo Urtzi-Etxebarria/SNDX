@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>LOGIN</title>
+	<link rel="stylesheet" href="styles/styles.css">
+	<script src="js/sha256login.js"></script>
+</head>
+
+<body>
+
+	<div th:include="plantillas.html::cabecera"></div>
+
+	<main>
+	
+		<section class="login-container">
+		
+			<form method="post" th:action="@{/login}" th:object="${obj_usu}">
+			
+				<h2>Iniciar sesión</h2>
+	
+				<label for="user">Nombre:</label>
+				<input type="text" th:field="*{name}" id="user" placeholder="Tu nombre de usuario">
+	
+				<label for="pass">Contraseña:</label>
+				<input type="password" th:field="*{pass}" id="pass" placeholder="Tu contraseña">
+	
+				<input type="submit" value="Login">
+	
+				<div class="login-links">
+					<a th:href="@{/forgot-password}">¿Olvidaste tu contraseña?</a>
+					<span>|</span>
+					<a th:href="@{/register}">Registrarse</a>
+				</div>
+				
+			</form>
+			
+		</section>
+		
+	</main>
+
+	<div th:include="plantillas.html::pie"></div>
+	
+</body>
+
+</html>

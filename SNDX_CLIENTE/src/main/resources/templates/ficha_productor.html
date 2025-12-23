@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title th:text="${productor.nombre}">Ficha del Productor</title>
+	<link rel="stylesheet" href="/styles/styles.css">
+	<link rel="stylesheet" href="/styles/styles_tablas.css">
+</head>
+
+<body>
+
+	<div th:include="plantillas.html::cabecera"></div>
+	<div th:include="plantillas.html::menu"></div>
+
+	<main>
+		<section>
+
+			<div class="tarjeta-disco" style="max-width: 600px; margin: auto;">
+
+				<div class="tarjeta-header">
+				
+					<!-- Foto del productor -->
+					<img th:src="@{/imagenes_productores/{foto}(foto=${productor.foto})}"
+						 alt="Foto del productor" class="tarjeta-imagen"
+						 onerror="this.onerror=null;this.src='/imagenes/default.png';">
+
+					<div class="tarjeta-info">
+						<h3 th:text="${productor.nombre}">Nombre del productor</h3>
+						<p>
+							<strong>Nota media:</strong>
+							<span th:text="${productor.notaMedia}">0</span>/10
+						</p>
+					</div>
+				</div>
+
+				<!-- Enlace Wikipedia -->
+				<strong>Enlaces:</strong>
+				<div class="tarjeta-links" style="margin-top: 20px; text-align: center;">
+					<a th:if="${productor.enlaceWikipedia != null}"
+					   th:href="${productor.enlaceWikipedia}"
+					   target="_blank"
+					   title="Wikipedia">
+						<img th:src="@{/imagenes/wikipedia.png}" alt="Wikipedia" class="icono-link">
+					</a>
+				</div>
+
+				<!-- Discografía del productor -->
+				<div class="tarjeta-detalle" style="margin-top: 30px;">
+					<h4>Discografía</h4>
+					<ul>
+						<li th:each="disco : ${listaDiscografia}">
+							<a th:href="@{/disco/{id}(id=${disco.id})}" th:text="${disco.nombre}">Nombre del disco</a>
+						</li>
+						<li th:if="${#lists.isEmpty(listaDiscografia)}">Este productor no tiene discos registrados.</li>
+					</ul>
+				</div>			
+
+				<!-- Botón volver -->
+				<div class="tarjeta-opciones">
+					<a th:href="@{/productores}" class="btn-editar">Volver</a>
+				</div>
+
+			</div>
+
+		</section>
+	</main>
+
+	<div th:include="plantillas.html::pie"></div>
+
+</body>
+</html>

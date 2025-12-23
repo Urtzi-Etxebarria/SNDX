@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error - SNDX</title>
+    <link rel="stylesheet" th:href="@{/styles/styles.css}">
+</head>
+<body>
+    <div th:include="plantillas.html::cabecera"></div>
+    
+    <main style="text-align: center; padding: 50px 20px;">
+        <div style="max-width: 600px; margin: 0 auto;">
+            <h1 style="color: var(--colorError); font-size: 4rem; margin-bottom: 20px;">😵</h1>
+            <h2 style="color: var(--colorContrasteClaro); margin-bottom: 20px;">¡Ups! Algo salió mal</h2>
+            
+            <div th:if="${error != null}" style="background: var(--colorFondoSecundario); padding: 20px; border-radius: 10px; margin: 20px 0;">
+                <p style="color: var(--colorError); margin: 0;" th:text="${error}"></p>
+            </div>
+            
+            <div th:if="${status != null}" style="margin: 15px 0;">
+                <p><strong>Código de error:</strong> <span th:text="${status}"></span></p>
+            </div>
+            
+            <div th:if="${timestamp != null}" style="margin: 15px 0;">
+                <p><strong>Fecha y hora:</strong> <span th:text="${timestamp}"></span></p>
+            </div>
+            
+            <div th:if="${message != null}" style="margin: 15px 0;">
+                <p><strong>Mensaje:</strong> <span th:text="${message}"></span></p>
+            </div>
+            
+            <div style="margin-top: 30px;">
+                <a th:href="@{/}" class="btn btn-primary" style="margin-right: 10px;">🏠 Ir al Inicio</a>
+                <button onclick="history.back()" class="btn btn-secondary">↩️ Volver Atrás</button>
+            </div>
+        </div>
+    </main>
+    
+    <div th:include="plantillas.html::pie"></div>
+</body>
+</html>

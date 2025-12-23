@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADMINISTRACIÓN</title>
+<link rel="stylesheet" th:href="@{/styles/styles.css}">
+</head>
+
+<body>
+
+    <div th:include="plantillas.html::cabecera"></div>
+    <div th:include="plantillas.html::menu"></div>
+    
+<main>
+
+    <section>
+    
+        <div th:include="plantillas.html::admin_buttons"></div>
+
+        <!-- FORMULARIO DISCOS -->
+        <form th:action="@{/GuardarDisco}" method="post" th:object="${obj_disco}" enctype="multipart/form-data">
+            <h2 style="margin-bottom:20px; text-align:center;">INSERTAR DISCOS</h2>
+
+            <label for="nombre">Nombre</label>
+            <input type="text" th:field="*{nombre}" id="nombre" placeholder="Nombre del disco">
+
+            <label for="foto2">Foto</label>
+				<input type="file" name="foto2">
+
+            <label for="puntuacion">Puntuación</label>
+            <input type="number" th:field="*{puntuacion}" min="0" max="10" id="puntuacion" placeholder="0-10">
+
+            <label for="fecha">Fecha</label>
+			<input type="text" th:field="*{fecha}" id="fecha">
+
+            <label for="enlaceWikipedia">Enlace Wikipedia</label>
+            <input type="text" th:field="*{enlaceWikipedia}" id="enlaceWikipedia" placeholder="https://...">
+
+            <label for="enlaceSpotify">Enlace Spotify</label>
+            <input type="text" th:field="*{enlaceSpotify}" id="enlaceSpotify" placeholder="https://...">
+
+            <label for="enlaceTidal">Enlace Tidal</label>
+            <input type="text" th:field="*{enlaceTidal}" id="enlaceTidal" placeholder="https://...">
+
+            <label for="artista">Artista</label>
+			<select name="artista" id="artista">
+			    <option th:each="art : ${listaArtistas}" th:value="${art.id}" th:text="${art.nombre}"></option>
+			</select>
+			
+			<label for="discografica">Discográfica</label>
+			<select name="discografica" id="discografica">
+			    <option th:each="disc : ${listaDiscograficas}" th:value="${disc.id}" th:text="${disc.nombre}"></option>
+			</select>
+			
+			<label for="productor">Productor</label>
+			<select name="productor" id="productor">
+			    <option th:each="prod : ${listaProductores}" th:value="${prod.id}" th:text="${prod.nombre}"></option>
+			</select>
+			
+			<label for="genero">Género</label>
+			<select name="genero" id="genero">
+			    <option th:each="gen : ${listaGeneros}" th:value="${gen.id}" th:text="${gen.nombre}"></option>
+			</select>
+
+
+            <input type="submit" value="Guardar">
+        </form>
+
+        <!-- TABLA DISCOS -->
+        <section style="margin-top:50px;">
+            <h2 style="text-align:center; margin-bottom:20px;">DISCOS</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Portada</th>
+                        <th>Puntuación</th>
+                        <th>Fecha</th>
+                        <th>Artista</th>
+                        <th>Discográfica</th>
+                        <th>Productor</th>
+                        <th>Género</th>
+                        <th>Enlaces</th>
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="elem : ${listaDiscos}">
+                        <td th:text="${elem.id}"></td>
+                        <td th:text="${elem.nombre}"></td>
+                        <td>
+                            <img th:src="@{'/imagenes_discos/' + ${elem.foto}}" alt="Foto" width="100" height="50" style="border-radius:8px; object-fit:cover;">
+                        </td>
+                        <td th:text="${elem.puntuacion}"></td>
+                        <td th:text="${elem.fecha}"></td>
+                        <td th:text="${elem.artista.nombre}"></td>
+                        <td th:text="${elem.discografica.nombre}"></td>
+                        <td th:text="${elem.productor.nombre}"></td>
+                        <td th:text="${elem.genero.nombre}"></td>
+                        <td>
+                            <a th:if="${elem.enlaceWikipedia}" th:href="${elem.enlaceWikipedia}" target="_blank">Wiki</a>
+                            <a th:if="${elem.enlaceSpotify}" th:href="${elem.enlaceSpotify}" target="_blank">Spotify</a>
+                            <a th:if="${elem.enlaceTidal}" th:href="${elem.enlaceTidal}" target="_blank">Tidal</a>
+                        </td>
+                        <td>
+                            <a th:href="@{/BorrarDisco(id=${elem.id})}" style="margin-right: 20px;">🗑️</a>
+                            <a th:href="@{/FrmModificarDisco(id=${elem.id})}">✏️</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </section>
+    
+</main>
+
+	<div th:include="plantillas.html::pie"></div>
+
+</body>
+</html>

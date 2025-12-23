@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADMINISTRACIÓN</title>
+<link rel="stylesheet" th:href="@{/styles/styles.css}">
+</head>
+
+<body>
+
+    <div th:include="plantillas.html::cabecera"></div>
+    <div th:include="plantillas.html::menu"></div>
+
+    <main>
+
+        <section>
+        
+            <div th:include="plantillas.html::admin_buttons"></div>
+
+            <!-- FORMULARIO -->
+            <form th:action="@{/GuardarDiscografica}" method="post" th:object="${obj_discografica}" enctype="multipart/form-data">
+                <h2 style="margin-bottom:20px; text-align:center;">INSERTAR DISCOGRÁFICAS</h2>
+
+                <label for="nombre">Nombre</label>
+                <input type="text" th:field="*{nombre}" id="nombre" placeholder="Nombre de la discográfica">
+         
+                <label for="foto2">Logo</label>
+                <input type="file" name="foto2">
+
+                <label for="enlaceWikipedia">Enlace Wikipedia</label>
+                <input type="text" th:field="*{enlaceWikipedia}" id="enlaceWikipedia" placeholder="https://...">
+
+                <input type="submit" value="Guardar">
+            </form>
+
+            <!-- TABLA -->
+            <section style="margin-top:50px;">
+                <h2 style="text-align:center; margin-bottom:20px;">DISCOGRÁFICAS</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Logo</th>
+                            <th>Enlace Wikipedia</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="elem : ${listaDiscograficas}">
+                            <td th:text="${elem.id}"></td>
+                            <td th:text="${elem.nombre}"></td>
+                            <td>
+							    <div class="logo-container">
+							        <img th:src="@{'/imagenes_logos/' + ${elem.logo}}" alt="Logo">
+							    </div>
+							</td>
+                            <td>
+                                <a th:if="${elem.enlaceWikipedia}" th:href="${elem.enlaceWikipedia}" target="_blank">Wiki</a>
+                            </td>
+                            <td>
+                                <a th:href="@{/BorrarDiscografica(id=${elem.id})}" style="margin-right: 20px;">🗑️</a>
+                                <a th:href="@{/FrmModificarDiscografica(id=${elem.id})}">✏️</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+        </section>
+        
+     </main>
+     
+     <div th:include="plantillas.html::pie"></div>
+
+</body>
+</html>

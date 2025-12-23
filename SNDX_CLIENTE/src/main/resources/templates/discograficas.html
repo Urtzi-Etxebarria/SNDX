@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DISCOGRAFICAS</title>
+<link rel="stylesheet" href="styles/styles.css">
+<link rel="stylesheet" href="styles/styles_tablas.css">
+</head>
+
+<body>
+
+	<div th:include="plantillas.html::cabecera"></div>
+	<div th:include="plantillas.html::menu"></div>
+
+	<main>
+
+		<section>
+
+			<div class="tarjetas-discos">
+
+				<div class="tarjeta-discografica"
+					th:each="discografica : ${listaDiscograficas}">
+
+					<div class="tarjeta-header">
+						<img th:src="@{/imagenes_logos/{foto}(foto=${discografica.logo})}"
+							alt="Foto Artista" class="tarjeta-imagen">
+						<div class="tarjeta-info">
+							<h3 th:text="${discografica.nombre}">Nombre de la discográfica</h3>
+						</div>
+					</div>
+
+					<div class="tarjeta-detalle">
+						<!-- Redes musicales -->
+						<div class="tarjeta-links">
+							<strong>Enlaces:</strong>
+							<a th:if="${discografica.enlaceWikipedia != null}" 
+							   th:href="${discografica.enlaceWikipedia}" target="_blank" title="Wikipedia">
+								<img src="/imagenes/wikipedia.png" alt="Wikipedia" class="icono-link">
+							</a>
+
+						</div><br>
+
+						<div>
+						
+							<h4>Discografía:</h4>
+							<ul>
+							    <li th:each="disco : ${discografica.discografia}">
+							        <a th:href="@{'/discos/' + ${disco.id}}"
+							           th:text="${disco.nombre}">Nombre del disco</a>
+							    </li>
+							</ul>
+							
+						</div>
+						
+					</div>
+
+				</div>
+
+			</div>
+
+
+		</section>
+
+	</main>
+
+	<div th:include="plantillas.html::pie"></div>
+</body>
+
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GÉNEROS</title>
+<link rel="stylesheet" href="styles/styles.css">
+</head>
+
+<body>
+
+	<div th:include="plantillas.html::cabecera"></div>
+	<div th:include="plantillas.html::menu"></div>
+
+	<main>
+		<section>
+
+			<div th:each="genero : ${listaGeneros}">
+				<h2 th:text="${genero.nombre}">Nombre del género</h2>
+
+				<ul>
+					<li th:each="disco : ${genero.discos}"><a
+						th:href="@{/discos/{id}(id=${disco.id})}"
+						th:text="${disco.nombre}">Nombre del disco</a></li>
+				</ul>
+				<br>
+
+				<p th:if="${#lists.isEmpty(genero.discos)}">No hay discos para
+					este género.</p>
+			</div>
+
+		</section>
+	</main>
+
+	<div th:include="plantillas.html::pie"></div>
+</body>
+
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADMINISTRACIÓN GÉNEROS</title>
+<link rel="stylesheet" th:href="@{/styles/styles.css}">
+</head>
+
+<body>
+
+    <div th:include="plantillas.html::cabecera"></div>
+    <div th:include="plantillas.html::menu"></div>
+    
+<main>
+
+    <section>
+    
+    	<div th:include="plantillas.html::admin_buttons"></div>
+
+        <!-- FORMULARIO GÉNEROS -->
+        <form th:action="@{/GuardarGenero}" method="post" th:object="${obj_genero}">
+            <h2 style="margin-bottom:20px; text-align:center;">INSERTAR GÉNEROS</h2>
+
+            <label for="nombre">Nombre</label>
+            <input type="text" th:field="*{nombre}" id="nombre" placeholder="Nombre del género">
+
+            <input type="submit" value="Guardar">
+        </form>
+
+        <!-- TABLA GÉNEROS -->
+        <section style="margin-top:50px;">
+            <h2 style="text-align:center; margin-bottom:20px;">GÉNEROS</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="gen : ${listaGeneros}">
+                        <td th:text="${gen.id}"></td>
+                        <td th:text="${gen.nombre}"></td>
+                        <td>
+                            <a th:href="@{/BorrarGenero(id=${gen.id})}" style="margin-right: 20px;">🗑️</a>
+                            <a th:href="@{/FrmModificarGenero(id=${gen.id})}">✏️</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+    </section>
+    
+</main>
+
+<div th:include="plantillas.html::pie"></div>
+
+</body>
+</html>
