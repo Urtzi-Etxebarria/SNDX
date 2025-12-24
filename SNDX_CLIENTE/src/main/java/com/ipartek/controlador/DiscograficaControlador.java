@@ -18,69 +18,136 @@ import com.ipartek.pojos.Discografica;
 import com.ipartek.servicios.DiscograficaServicio;
 import jakarta.servlet.http.HttpSession;
 
+/**
+ * Controlador MVC encargado de gestionar las operaciones relacionadas
+ * con las discográficas de la aplicación.
+ * <p>
+ * Permite:
+ * <ul>
+ *   <li>Listar discográficas</li>
+ *   <li>Mostrar la ficha detallada de una discográfica</li>
+ *   <li>Gestionar discográficas desde el panel de administración</li>
+ *   <li>Insertar nuevas discográficas junto con su imagen</li>
+ * </ul>
+ * </p>
+ * <p>
+ * Todas las operaciones requieren autenticación mediante un token JWT
+ * almacenado en la sesión HTTP.
+ * </p>
+ */
 @Controller
 public class DiscograficaControlador {
-	
-	@Autowired
+
+    /**
+     * Servicio encargado de la lógica de negocio de las discográficas.
+     */
+    @Autowired
     private DiscograficaServicio discograficaServicio;
-	
-	private static final Logger logger = LoggerFactory.getLogger(DiscograficaControlador.class);
-	
-	@GetMapping("/discograficas")
-	public String listarDiscograficas(HttpSession session, Model model) {
-	    String token = (String) session.getAttribute("jwt_token");
 
-	    if (token == null) {
-	        return "redirect:/";
-	    }
+    /**
+     * Logger para el registro de información y errores del controlador.
+     */
+    private static final Logger logger =
+            LoggerFactory.getLogger(DiscograficaControlador.class);
 
-	    List<Discografica> listaDiscograficas = discograficaServicio.obtenerTodasDiscograficas(token);
+    /**
+     * Muestra el listado de todas las discográficas.
+     * <p>
+     * Para cada discográfica se carga también su discografía asociada.
+     * </p>
+     *
+     * @param session sesión HTTP del usuario
+     * @param model modelo para enviar la lista de discográficas a la vista
+     * @return vista con el listado de discográficas o redirección al inicio
+     */
+    @GetMapping("/discograficas")
+    public String listarDiscograficas(HttpSession session, Model model) {
+        String token = (String) session.getAttribute("jwt_token");
 
-	    for (Discografica discografica : listaDiscograficas) {
-	        List<Disco> discografia = discograficaServicio.obtenerDiscografiaPorDiscografica(discografica.getId(), token);
-	        discografica.setDiscografia(discografia);
-	    }
+        if (token == null) {
+            return "redirect:/";
+        }
 
-	    model.addAttribute("listaDiscograficas", listaDiscograficas);
+        List<Discografica> listaDiscograficas =
+                discograficaServicio.obtenerTodasDiscograficas(token);
 
-	    return "discograficas";
-	}
-	
-	
-	@GetMapping("/discograficas/{id}")
-	public String verDiscografica(@PathVariable("id") int id, HttpSession session, Model model) {
-	    String token = (String) session.getAttribute("jwt_token");
+        for (Discografica discografica : listaDiscograficas) {
+            List<Disco> discografia = discograficaServicio.obtenerDiscografiaPorDiscografica(discografica.getId(), token);
+            discografica.setDiscografia(discografia);
+        }
 
-	    if (token == null) {
-	        return "redirect:/";
-	    }
+        model.addAttribute("listaDiscograficas", listaDiscograficas);
+        return "discograficas";
+    }
 
-	    Discografica discografica = discograficaServicio.obtenerDiscograficaPorId(id, token);
-	    model.addAttribute("discografica", discografica);
-	    model.addAttribute("listaDiscografia", discograficaServicio.obtenerDiscografiaPorDiscografica(id, token));
+    /**
+     * Muestra la ficha detallada de una discográfica concreta.
+     *
+     * @param id identificador de la discográfica
+     * @param session sesión HTTP del usuario
+     * @param model modelo para enviar la discográfica y su discografía a la vista
+     * @return vista con la información de la discográfica o redirección al inicio
+     */
+    @GetMapping("/discograficas/{id}")
+    public String verDiscografica(@PathVariable("id") int id,
+                                  HttpSession session,
+                                  Model model) {
 
-	    return "ficha_discografica";
-	}
-	
-	@GetMapping("/administracion/discograficas")
+        String token = (String) session.getAttribute("jwt_token");
+
+        if (token == null) {
+            return "redirect:/";
+        }
+
+        Discografica discografica =
+                discograficaServicio.obtenerDiscograficaPorId(id, token);
+
+        model.addAttribute("discografica", discografica);
+        model.addAttribute("listaDiscografia", discograficaServicio.obtenerDiscografiaPorDiscografica(id, token));
+
+        return "ficha_discografica";
+    }
+
+    /**
+     * Muestra la vista de administración de discográficas.
+     *
+     * @param session sesión HTTP del usuario
+     * @param model modelo para enviar datos a la vista
+     * @return vista de administración de discográficas
+     */
+    @GetMapping("/administracion/discograficas")
     public String mostrarDiscograficas(HttpSession session, Model model) {
-    	String token = (String) session.getAttribute("jwt_token");
+        String token = (String) session.getAttribute("jwt_token");
 
-	    if (token == null) {
-	        return "redirect:/";
-	    }
+        if (token == null) {
+            return "redirect:/";
+        }
 
         model.addAttribute("listaDiscograficas", discograficaServicio.obtenerTodasDiscograficas(token));
         model.addAttribute("obj_discografica", new Discografica());
 
         return "discograficas_crud";
     }
-	
-	@PostMapping("/GuardarDiscografica")
+
+    /**
+     * Guarda una nueva discográfica en el sistema.
+     * <p>
+     * Recibe los datos desde el formulario y permite adjuntar una imagen.
+     * La inserción se realiza a través del servicio REST.
+     * </p>
+     *
+     * @param session sesión HTTP del usuario
+     * @param model modelo para mostrar mensajes de error
+     * @param obj_discografica objeto discográfica recibido desde el formulario
+     * @param archivo archivo de imagen de la discográfica (opcional)
+     * @return redirección al listado de discográficas o vista de error
+     */
+    @PostMapping("/GuardarDiscografica")
     public String guardarDiscografica(HttpSession session,
-                                 Model model,
-                                 @ModelAttribute Discografica obj_discografica,
-                                 @RequestParam(name = "foto2", required = false) MultipartFile archivo) {
+                                      Model model,
+                                      @ModelAttribute Discografica obj_discografica,
+                                      @RequestParam(name = "foto2", required = false)
+                                      MultipartFile archivo) {
 
         String token = (String) session.getAttribute("jwt_token");
         if (token == null) {
@@ -88,16 +155,13 @@ public class DiscograficaControlador {
         }
 
         try {
-            // Llamamos al servicio que enviará el artista y la foto al REST
-        	discograficaServicio.insertarDiscografica(obj_discografica, archivo, token);
-
+            discograficaServicio.insertarDiscografica(obj_discografica, archivo, token);
         } catch (IOException e) {
-            logger.error("Error al insertar el artista", e);
-            model.addAttribute("error", "No se pudo insertar el artista.");
+            logger.error("Error al insertar la discográfica", e);
+            model.addAttribute("error", "No se pudo insertar la discográfica.");
             return "error";
         }
 
         return "redirect:/discograficas";
     }
-
 }

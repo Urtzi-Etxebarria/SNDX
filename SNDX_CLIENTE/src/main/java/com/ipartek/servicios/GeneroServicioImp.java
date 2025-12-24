@@ -12,12 +12,26 @@ import org.springframework.web.client.RestTemplate;
 import com.ipartek.pojos.Disco;
 import com.ipartek.pojos.Genero;
 
+/**
+ * Implementación del servicio {@link GeneroServicio} para la gestión de géneros musicales.
+ * <p>
+ * Esta clase se comunica con una API REST externa para realizar operaciones de
+ * CRUD sobre géneros y para obtener los discos asociados a un género específico.
+ * Todas las peticiones requieren un token JWT válido.
+ * </p>
+ */
 @Service
 public class GeneroServicioImp implements GeneroServicio {
 
+    /** Cliente REST para consumir la API externa */
     private final RestTemplate restTemplate = new RestTemplate();
+
+    /** URL base de la API de géneros */
     private final String URL = "http://localhost:9090/api/generos";
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Genero> obtenerTodosGeneros(String jwtToken) {
         HttpHeaders headers = new HttpHeaders();
@@ -37,6 +51,9 @@ public class GeneroServicioImp implements GeneroServicio {
         return generos != null ? Arrays.asList(generos) : new ArrayList<>();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Genero obtenerGeneroPorId(int id, String jwtToken) {
         HttpHeaders headers = new HttpHeaders();
@@ -56,6 +73,9 @@ public class GeneroServicioImp implements GeneroServicio {
         return response.getBody();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void modificarGenero(Genero genero, String jwtToken) {
         HttpHeaders headers = new HttpHeaders();
@@ -71,6 +91,9 @@ public class GeneroServicioImp implements GeneroServicio {
         );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void insertarGenero(Genero genero, String jwtToken) {
         HttpHeaders headers = new HttpHeaders();
@@ -86,6 +109,9 @@ public class GeneroServicioImp implements GeneroServicio {
         );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void borrarGenero(Integer id, String jwtToken) {
         HttpHeaders headers = new HttpHeaders();
@@ -103,6 +129,9 @@ public class GeneroServicioImp implements GeneroServicio {
         );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Disco> obtenerDiscosPorGenero(int idGenero, String jwtToken) {
         HttpHeaders headers = new HttpHeaders();
@@ -125,4 +154,3 @@ public class GeneroServicioImp implements GeneroServicio {
     }
 
 }
-

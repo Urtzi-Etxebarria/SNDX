@@ -10,36 +10,75 @@ import com.ipartek.servicios.DiscograficaServicio;
 import com.ipartek.servicios.ProductorServicio;
 import jakarta.servlet.http.HttpSession;
 
+/**
+ * Controlador MVC encargado de gestionar la página principal (home)
+ * de la aplicación.
+ * <p>
+ * Muestra información destacada como:
+ * <ul>
+ *   <li>Disco de la semana</li>
+ *   <li>Artista de la semana</li>
+ *   <li>Productor de la semana</li>
+ *   <li>Discográfica de la semana</li>
+ * </ul>
+ * </p>
+ * <p>
+ * El acceso requiere autenticación mediante un token JWT almacenado
+ * en la sesión HTTP.
+ * </p>
+ */
 @Controller
 public class HomeControlador {
-	
-	@Autowired
+
+    /**
+     * Servicio encargado de la gestión de discos.
+     */
+    @Autowired
     private DiscoServicio discoService;
+
+    /**
+     * Servicio encargado de la gestión de artistas.
+     */
     @Autowired
     private ArtistaServicio artistaService;
+
+    /**
+     * Servicio encargado de la gestión de productores.
+     */
     @Autowired
     private ProductorServicio productorService;
+
+    /**
+     * Servicio encargado de la gestión de discográficas.
+     */
     @Autowired
     private DiscograficaServicio discograficaService;
 
+    /**
+     * Muestra la página principal de la aplicación.
+     * <p>
+     * Obtiene elementos destacados de forma aleatoria y los envía
+     * a la vista para su visualización.
+     * </p>
+     *
+     * @param session sesión HTTP del usuario
+     * @param model modelo para enviar los datos a la vista
+     * @return vista principal de la aplicación o redirección al login
+     */
     @GetMapping("/home")
     public String home(HttpSession session, Model model) {
-        // 1️⃣ Obtener el token JWT de la sesión
+
         String jwtToken = (String) session.getAttribute("jwt_token");
 
-        // 2️⃣ Si el token no existe, redirigir al login
         if (jwtToken == null) {
             return "redirect:/";
         }
 
-        // 3️⃣ Llamar a los servicios usando el token
         model.addAttribute("discoSemana", discoService.obtenerDiscoAleatorio(jwtToken));
         model.addAttribute("artistaSemana", artistaService.obtenerArtistaAleatorio(jwtToken));
         model.addAttribute("productorSemana", productorService.obtenerProductorAleatorio(jwtToken));
         model.addAttribute("discograficaSemana", discograficaService.obtenerDiscograficaAleatorio(jwtToken));
 
-        // 4️⃣ Retornar la vista del home
         return "home";
     }
-
 }
